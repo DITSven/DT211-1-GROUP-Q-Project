@@ -1,0 +1,66 @@
+/*Program to allocate a
+  struct map_flags array
+*/
+#include <stdio.h>
+#include <stdlib.h>
+
+/*This is the struct I'll be using for
+    the array. Flags mean we can hold
+    multiple pieces of information for
+    each square, such as if it's safe
+    and if we're currently in it.
+    This simplifies a lot of issues with
+    swapping states for each position on
+    the array 
+  */
+struct map_flags
+{
+    int start;
+    int current;
+    int safe;
+    int mine;
+    int object;
+};
+
+typedef struct map_flags flags;
+
+/*This is to become a function to initialise the
+  map array. The function would look something 
+  like:
+
+(flags **) startArray(void);
+
+    Implemented it would look something like:
+
+flags **map = startArray();
+
+    This could also just be copied into main but
+    probably cleaner to keep in a function.
+*/
+
+main()
+{
+    
+    int map_row = 1;
+    int map_col = 1;
+    int i;
+    
+    flags square;
+    //declare and initialise struct array
+    static flags **map;
+    map = (flags **)malloc(map_row*sizeof(flags *));
+    for(i = 0; i < map_row; i++)
+    {
+        *(map + i) = (flags *)malloc(map_col*sizeof(flags));
+    }//end for
+    
+    /*initialising flags
+            for first square*/
+    square = **map;
+    square.start = 1;
+    square.current = 1;
+    square.safe = 1;
+    square.mine = 0;
+    square.object = 0;
+    
+}//end main
