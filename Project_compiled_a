@@ -1,0 +1,393 @@
+#pragma config(Sensor, S4,     SonarSensor,          sensorSONAR)
+#pragma config(Sensor, S1, LightSensor, sensorLightActive)
+#pragma config(Motor,  motorB,          rightMotor,    tmotorNXT, openLoop, encoder)
+#pragma config(Motor,  motorC,          leftMotor,     tmotorNXT, openLoop, encoder)
+
+
+#define ROW 7
+#define COL 9
+#define LSIZE 2
+
+//define global variables
+//2d array for mapping
+int map[ROW][COL];
+//array for start coordinates
+int start[LSIZE];
+//array for coordinates of next square
+int next[LSIZE];
+//array for coordinates of current square
+int loc[LSIZE];
+//array for coordinates of first object found
+int object1[LSIZE];
+//array for coordinates of second object found
+int object2[LSIZE];
+//array for distance and angle to start square
+float home_dir[LSIZE];
+//array for distance and angle to object1 from start
+float go_to_object1[LSIZE];
+//array for distance and angle to object2 from start
+float go_to_object2[LSIZE];
+
+//function prototypes
+void ForwardOneSquare(void);
+int LeftTurn(int circle, int dir);
+int RightTurn(int circle, int dir);
+void setSquareBlack(void);
+void setNextSquare(int dir);
+void setCurrentSquare(void);
+void foundObj1(void);
+void foundObj2(void);
+void setSquareWhite(void);
+void findObjectAngle1(void);
+void findObjectAngle2(void);
+void goHome(void);
+
+task main()
+{
+ /* Accurate turns calculation */
+ //variables to store calculation data.
+ float c_rotation;
+ float c_distance;
+ float temp;
+ float circle;
+
+ //variables to store initial values.
+ float d1 = 51.0;// radius of wheel
+ float d2 = 102.0;// lenght between both wheels
+ float pie = 3.141592;
+
+ //Calculation.
+ c_rotation = (pie * d1);
+ c_distance =(pie * d2);
+ temp = (c_distance / c_rotation);
+ circle = (temp * c_distance);
+
+ //Mapping and direction tracking values
+ //direction int
+ //1 = col+1, 2 = row+1
+ //3 = col-1, 4 = row-1
+ int dir = 1;
+
+ //current location
+ loc[0] = 3;
+ loc[1] = 0;
+
+ //start location
+ start[0] = 3;
+ start[0] = 0;
+
+ //next coordinates
+ next[0] = 3;
+ next[1] = 1;
+ //objects found count
+ int found_objects = 0;
+
+
+ /* Thresholdvalue */
+
+ int light; // Variable to hold light value
+ int Dark; // Variable to hold dark value
+ int sum; // Variable to hold sum value
+ int thresholdValue; // Variable to hold threshold value
+
+ light = 65;
+ Dark = 30;
+ sum = light + Dark;
+ thresholdValue = sum/2;
+
+ wait1Msec(1000);
+
+ int r = random(2);
+ while(found_objects < 2)
+ {
+ while(SensorValue(SonarSensor) > 27)
+ {
+ if(SensorValue(LightSensor) < thresholdValue)
+ {
+ nxtDisplayCenteredTextLine(4, "Black cell");
+ setSquareBlack();
+
+ if(r == 1)
+ {
+ dir = LeftTurn(circle, dir);
+ }
+ else
+ {
+ dir = RightTurn(circle, dir);
+ }
+
+ setNextSquare(dir);
+
+ } // End if()
+ else
+ {
+ nxtDisplayCenteredTextLine(4, "white cell");
+ setSquareWhite();
+ ForwardOneSquare();
+ setCurrentSquare();
+ setNextSquare(dir);
+ } // End else()
+ }//end while()
+
+ if(found_objects == 0)
+ {
+ object1[0] = next[0];
+ object1[1] = next[1];
+ found_objects = found_objects + 1;
+ }//end if
+ if(found_objects == 1)
+ {
+ if ((next[0] == object1[0]) && (next[1] == object1[1]))
+ {
+ //first object found again
+ }//end if
+ else
+ {
+ object2[0] = next[0];
+ object2[1] = next[1];
+ found_objects = found_objects + 1;
+ }//end else
+
+ }//end if
+
+}// End while()
+
+goHome();
+findObjectAngle1();
+findObjectAngle2();
+
+}//end main()
+
+void ForwardOneSquare() // Forward function
+{
+ int distance_square = 290;// width of the square
+
+ nMotorPIDSpeedCtrl[motorB] = mtrSpeedReg;
+ nMotorPIDSpeedCtrl[motorC] = mtrSpeedReg;
+
+ nMotorEncoder[motorB] = 0;
+ nMotorEncoder[motorC] = 0;
+
+ nMotorEncoderTarget[motorB] = distance_square;
+ nMotorEncoderTarget[motorC] = distance_square;
+
+ motor[motorB] = 20;
+ motor[motorC] = 20;
+
+ while(nMotorRunState[motorC] != runStateIdle)
+ {
+ wait1Msec(1000);
+ }
+
+
+ motor[motorB] = 0;
+ motor[motorC] = 0;
+
+
+} // End function
+
+//function to turn robot left
+int LeftTurn(int circle, int dir)
+{
+
+
+ nMotorPIDSpeedCtrl[motorB] = mtrSpeedReg;
+ nMotorPIDSpeedCtrl[motorC] = mtrSpeedReg;
+
+ nMotorEncoder[motorB] = 0;
+ nMotorEncoder[motorC] = 0;
+
+ nMotorEncoderTarget[motorB] = circle *0.25;
+ nMotorEncoderTarget[motorC] = -circle * 0.25;
+
+ motor[motorB] = 20;
+ motor[motorC] = -20;
+
+ while(nMotorRunState[motorB] != runStateIdle)
+ {
+
+ }
+
+
+ motor[motorB] = 0;
+ motor[motorC] = 0;
+
+//changing direction variable
+ if(dir == 1)
+ {
+ dir = 4;
+ }//end if
+ if(dir == 2)
+ {
+ dir = 1;
+ }//end if
+ if(dir == 3)
+ {
+ dir = 2;
+ }//end if
+ if(dir == 4)
+ {
+ dir = 3;
+ }//end if
+
+ return(dir);
+}
+
+//function to turn right
+int RightTurn(int circle, int dir)
+{
+
+ nMotorPIDSpeedCtrl[motorB] = mtrSpeedReg;
+ nMotorPIDSpeedCtrl[motorC] = mtrSpeedReg;
+
+ nMotorEncoder[motorB] = 0;
+ nMotorEncoder[motorC] = 0;
+
+ nMotorEncoderTarget[motorB] = -circle *0.25;
+ nMotorEncoderTarget[motorC] = circle * 0.25;
+
+ motor[motorB] = -20;
+ motor[motorC] = 20;
+
+ while(nMotorRunState[motorB] != runStateIdle)
+ {
+
+ }
+
+
+ motor[motorB] = 0;
+ motor[motorC] = 0;
+
+//change direction variable
+ if(dir == 1)
+ {
+ dir = 2;
+ }//end if
+ if(dir == 2)
+ {
+ dir = 3;
+ }//end if
+ if(dir == 3)
+ {
+ dir = 4;
+ }//end if
+ if(dir == 4)
+ {
+ dir = 1;
+ }//end if
+
+ return(dir);
+}
+
+//function to set next square on grid as white in array
+void setSquareWhite()
+{
+ int i = next[0];
+ int j = next[1];
+ map[i][j] = 1;
+
+}//end setSquareWhite
+
+//function to mark square as black
+void setSquareBlack()
+{
+
+ int i = next[0];
+ int j = next[1];
+ map[i][j] = 2;
+
+}//end setSquareBlack
+
+
+//function to set next square array
+void setNextSquare(int dir)
+{
+ if(dir == 1)
+ {
+  next[1] = next[1] + 1;
+ }//end if
+ if(dir == 2)
+ {
+  next[0] = next[0] + 1;
+ }//end if
+ if(dir == 3)
+ {
+  next[1] = next[1] - 1;
+ }//end if
+ if(dir == 4)
+ {
+  next[0] = next[0] - 1;
+ }//end if
+
+}//end setNextSquare()
+
+//function to set current location square
+void setCurrentSquare()
+{
+ loc[0] = next[0];
+ loc[1] = next[1];
+}//end setCurrentSquare()
+
+//function to mark found object1 location
+void foundObj1()
+{
+ object1[0] = next[0];
+ object1[1] = next[1];
+
+}//end foundObj1()
+
+//function to mark found object2 location
+void foundObj2()
+{
+
+ object2[0] = next[0];
+ object2[1] = next[1];
+
+}//end foundObj2()
+
+//function to calculate angle to turn to face object1
+//and provide distance to object1
+void findObjectAngle1()
+{
+ float i =(float) (object1[0] - loc[0]);//difference between rows
+ float j =(float) (object1[1] - loc[1]);//difference between columns
+ float distance;//variable to store hypotenuse (direct distance)
+ //pythagoras
+ float y = (i*i) + (j*j);
+ distance = sqrt(y);
+ //calculating angle using sine
+ float x;
+ x = j/distance;
+ float angle = asin(x);
+ go_to_object1[0] = distance;
+ go_to_object1[1] = angle;
+}//end findObjectAngle1()
+
+void findObjectAngle2()
+{
+ float i =(float) (object2[0] - loc[0]);
+ float j =(float) (object2[1] - loc[1]);
+ float distance;
+ float y = (i*i) + (j*j);
+ distance = sqrt(y);
+ float x;
+ x = j/distance;
+ float angle = asin(x);
+ go_to_object2[0] = distance;
+ go_to_object2[1] = angle;
+}//end findObjectAngle2()
+
+//function to return to the first square
+void goHome()
+{
+ float i =(float) (start[0] - loc[0]);
+ float j =(float) (start[1] - loc[1]);
+ float distance;
+ float y = (i*i) + (j*j);
+ distance = sqrt(y);
+ float x;
+ x = j/distance;
+ float angle = asin(x);
+ home_dir[0] = distance;
+ home_dir[1] = angle;
+}//end goHome()
