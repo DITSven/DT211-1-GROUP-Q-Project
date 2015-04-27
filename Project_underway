@@ -4,16 +4,16 @@
 #define LSIZE 2
 
 void ForwardOneSquare(void);
-int dir LeftTurn(int circle);
-int dir RightTurn(int circle);
-int map[][] setSquareBlack(int map[][]], int square[]);
-int next[] setNextSquare(int next[], int dir);
-int loc[] setCurrentSquare(int next[]);
-int obj[] foundObj1(int next[]);
-int obj[] foundObj2(int next[]);
-int array[][] setSquareWhite(int array[][]], int square[]);
-float object_dir[] findObjectAngle(int loc[], int obj[]);
-void goHome(int cur[], int start[]);
+int LeftTurn(int circle);
+int RightTurn(int circle);
+void setSquareBlack(int **map, int *square);
+void setNextSquare(int *next, int dir);
+int * setCurrentSquare(int *next);
+int * foundObj1(int *next);
+int * foundObj2(int *next);
+void setSquareWhite(int **array, int *square);
+float * findObjectAngle(int *loc, int *obj);
+void goHome(int *cur, int *start);
 
 task main()
 {
@@ -45,25 +45,39 @@ task main()
  int dir = 1;
 
  //map array
- int map[ROW][COL] = {0};
+ int **map;
+ map = (int *)calloc(ROW, sizeof(int *));
+ *map = (int *)calloc(COL, sizeof(int));
+ 
  //current location array
- int loc[LSIZE] = {3,0};
+ int *loc;
+ loc = malloc(LSIZE*sizeof(int));
+ *loc = 3;
+ *(loc + 1) = 0;
  //next square array
- int next[LSIZE];
+ int *next;
+ next = malloc(LSIZE*sizeof(int); 
  //start location square array
- const int start[LSIZE] = {3,0};
+ const int *start;
+ start = malloc(LSIZE*sizeof(int));
+ *start = 3;
+ *(start + 1) = 0;
  //object1 location array
- int object1[LSIZE];
+ int *object1;
+ object1 = malloc(LSIZE*sizeof(int));
  //object2 location array
- int object2[LSIZE];
+ int *object2;
+ object2 = malloc(LSIZE*sizeof(int));
  //objects found count
  int found_objects = 0;
  //arrays to hold data for moving
  //to found objects from start position
  //element 0 = distance
  //element 1 = radians
- float go_to_object1[LSIZE];
- float go_to_object2[LSIZE];
+ float *go_to_object1;
+ go_to_object1 = malloc(LSIZE*sizeof(int));
+ float *go_to_object2;
+ go_to_object2 = malloc(LSIZE*sizeof(int));
  
  
  /* Thresholdvalue */
@@ -88,7 +102,7 @@ task main()
  if(SensorValue(LightSensor) < thresholdValue)
  {
  nxtDisplayCenteredTextLine(4, "Black cell");
- map = setSquareBlack(map, next);
+ setSquareBlack(map, next);
 
  if(r == 1)
  {
@@ -99,16 +113,16 @@ task main()
  dir = RightTurn(circle);
  }
 
- next = setNextSquare(next, dir);
+ setNextSquare(next, dir);
 
  } // End if()
  else
  {
  nxtDisplayCenteredTextLine(4, "white cell");
- map = setSquareWhite(map, next);
+ setSquareWhite(map, next);
  ForwardOneSquare();
  loc = setCurrentSquare(next);
- next = setNextSquare(next, dir);
+ setNextSquare(next, dir);
  } // End else()
  }//end while()
  int found_objects = found_objects + 1;
@@ -234,87 +248,100 @@ void RightTurn(int circle)
  }//end if
 }
 
-int array[][] setSquareWhite(int array[][]], int square[])
+void setSquareWhite(int **array, int *square)
 {
 
- int i = square[0];
- int j = square[1];
- array[i][j] = 1;
- return array;
+ int i = *square;
+ int j = *(square + 1);
+ *(*(square + i) + j) = 1;
+ 
 }//end setSquareWhite
 
 //function to mark square as black
-int array[][] setSquareBlack(int array[][]], int square[])
+void setSquareBlack(int **array, int *square)
 {
 
- int i = square[0];
- int j = square[1];
- array[i][j] = 2;
- return array;
+ int i = *square;
+ int j = *(square + 1);
+ *(*(array + i) + j) = 2;
+ 
 }//end setSquareBlack
 
 
 //function to set next square array
-int next[] setNextSquare(int next[], int dir)
+void setNextSquare(int *next, int dir)
 {
  if(dir = 1)
  {
- next[1] = next[1] + 1;
+*(next + 1) = *(next + 1) + 1;
  }//end if
  if(dir = 2)
  {
- next[0] = next[0] + 1;
+ *next = *(next) + 1;
  }//end if
 if(dir = 3)
 {
-next[1] = next[1] - 1;
+*(next + 1) = *(next + 1) - 1;
 }//end if
 if(dir = 4)
 {
-next[0] = next[0] - 1;
+*next = *(next) - 1;
 }//end if
 
 return next;
 }//end setNextSquare()
 
 //function to set current location square
-int loc[] setCurrentSquare(int next[])
+int *setCurrentSquare(int *next)
 {
- loc[0] = next[0];
- loc[1] = next[1];
+ int *obj;
+ obj = malloc(LSIZE*sizeof(int));
+ *obj = *next;
+ *(obj + 1) = *(next + 1);
+ return(obj)
 }//end setCurrentSquare()
 
 //function to mark found object1 location
-int obj[] foundObj1(int next[])
+int * foundObj1(int *next)
 {
- obj[0] = next[0];
- obj[1] = next[1];
+ int *obj;
+ obj = malloc(LSIZE*sizeof(int));
+ *obj = *next;
+ *(obj + 1) = *(next + 1);
+ return(obj)
 }//end foundObj1()
 
 //function to mark found object2 location
-int obj[] foundObj2(int next[])
+int * foundObj2(int *next)
 {
- obj[0] = next[0];
- obj[1] = next[1];
+ int *obj;
+ obj = malloc(LSIZE*sizeof(int));
+ *obj = *next;
+ *(obj + 1) = *(next + 1);
+ return(obj)
 }//end foundObj2()
 
 //function to calculate angle to turn to face object
-float object_dir[] findObjectAngle(int loc[], int obj[])
+float *findObjectAngle(int *loc, int *obj)
 {
- float i =(float) (obj[0] - loc[0]);
- float j =(float) (obj[1] - loc[1]);
+ float i =(float) (*obj- *loc);
+ float j =(float) (*(obj +1) - *(loc +1));
  float k;
  float y = (i*i) + (j*j);
  k = sqrt(y);
  float x;
  x = j/k;
- float param = asin(x);
- float object_dir[2] = {k, param};
- return(object_dir[]);
+ float angle = asin(x);
+ float *object_dir;
+ object_dir = malloc(LSIZE*sizeof(float));
+ *object_dir = k;
+ *(object_dir + 1) = angle;
+ 
+ return(object_dir);
 }//end findObjectAngle()
  
 //function to return to the first square
-void goHome(int cur[], int start[])
+void goHome(int *cur, int *start)
 {
 
 }//end goHome()
