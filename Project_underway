@@ -13,7 +13,7 @@ int obj[] foundObj1(int next[]);
 int obj[] foundObj2(int next[]);
 int array[][] setSquareWhite(int array[][]], int square[]);
 float object_dir[] findObjectAngle(int loc[], int obj[]);
-
+void goHome(int cur[], int start[]);
 
 task main()
 {
@@ -83,6 +83,8 @@ task main()
  int r = random(2);
  while(found_objects < 2)
  {
+ while(SensorValue(sonarSensor) > 26)
+ {
  if(SensorValue(LightSensor) < thresholdValue)
  {
  nxtDisplayCenteredTextLine(4, "Black cell");
@@ -108,7 +110,9 @@ task main()
  loc = setCurrentSquare(next);
  next = setNextSquare(next, dir);
  } // End else()
-
+ }//end while()
+ int found_objects = found_objects + 1;
+ goHome();
  } // End while()
 go_to_object1 = findObjectAngle(start, object1);
 go_to_object2 = findObjectangle(start, object2);
@@ -309,4 +313,9 @@ float object_dir[] findObjectAngle(int loc[], int obj[])
  return(object_dir[]);
 }//end findObjectAngle()
  
+//function to return to the first square
+void goHome(int cur[], int start[])
+{
+
+}//end goHome()
  
