@@ -12,6 +12,7 @@ int loc[] setCurrentSquare(int next[]);
 int obj[] foundObj1(int next[]);
 int obj[] foundObj2(int next[]);
 int array[][] setSquareWhite(int array[][]], int square[]);
+float object_dir[] findObjectAngle(int loc[], int obj[]);
 
 
 task main()
@@ -57,7 +58,14 @@ task main()
  int object2[LSIZE];
  //objects found count
  int found_objects = 0;
-
+ //arrays to hold data for moving
+ //to found objects from start position
+ //element 0 = distance
+ //element 1 = radians
+ float go_to_object1[LSIZE];
+ float go_to_object2[LSIZE];
+ 
+ 
  /* Thresholdvalue */
 
  int light; // Variable to hold light value
@@ -102,7 +110,8 @@ task main()
  } // End else()
 
  } // End while()
-
+go_to_object1 = findObjectAngle(start, object1);
+go_to_object2 = findObjectangle(start, object2);
 }
 
 void ForwardOneSquare() // Forward function
@@ -284,3 +293,20 @@ int obj[] foundObj2(int next[])
  obj[0] = next[0];
  obj[1] = next[1];
 }//end foundObj2()
+
+//function to calculate angle to turn to face object
+float object_dir[] findObjectAngle(int loc[], int obj[])
+{
+ float i =(float) (obj[0] - loc[0]);
+ float j =(float) (obj[1] - loc[1]);
+ float k;
+ float y = (i*i) + (j*j);
+ k = sqrt(y);
+ float x;
+ x = j/k;
+ float param = asin(x);
+ float object_dir[2] = {k, param};
+ return(object_dir[]);
+}//end findObjectAngle()
+ 
+ 
