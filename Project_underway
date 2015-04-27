@@ -1,4 +1,6 @@
 #pragma config(Sensor, S1, LightSensor, sensorLightActive)
+
+#include <math.h>
 #define ROW 7
 #define COL 9
 #define LSIZE 2
@@ -70,14 +72,21 @@ task main()
  object2 = malloc(LSIZE*sizeof(int));
  //objects found count
  int found_objects = 0;
+ 
+ //array to hold data for moving to
+ //start position after finding objects
+ float *home_dir;
+ home_dir = malloc(LSIZE*sizeof(float));
+ 
  //arrays to hold data for moving
  //to found objects from start position
  //element 0 = distance
  //element 1 = radians
  float *go_to_object1;
- go_to_object1 = malloc(LSIZE*sizeof(int));
+ go_to_object1 = malloc(LSIZE*sizeof(float));
  float *go_to_object2;
- go_to_object2 = malloc(LSIZE*sizeof(int));
+ go_to_object2 = malloc(LSIZE*sizeof(float));
+ 
  
  
  /* Thresholdvalue */
@@ -97,7 +106,7 @@ task main()
  int r = random(2);
  while(found_objects < 2)
  {
- while(SensorValue(sonarSensor) > 26)
+ while(SensorValue(sonarSensor) > 27)
  {
  if(SensorValue(LightSensor) < thresholdValue)
  {
@@ -125,12 +134,35 @@ task main()
  setNextSquare(next, dir);
  } // End else()
  }//end while()
- int found_objects = found_objects + 1;
- goHome();
- } // End while()
+ 
+ if(found_objects == 0)
+ {
+ *object1 = *next;
+ *(object1 + 1) = *(next + 1);
+ found_objects = found_objects + 1;
+ }//end if
+ if(found_objects == 1)
+ {
+ if ((*next == *object1) && (*(next + 1) == *(object1 + 1)))
+ {
+ //first object found again
+ }//end if
+ else
+ {
+ *object2 = *next;
+ *(object2 + 1) = *(next + 1);
+ found_objects = found_objects + 1;
+ }//end else
+ 
+ }//end if
+ 
+}// End while()
+  
+goHome();
 go_to_object1 = findObjectAngle(start, object1);
 go_to_object2 = findObjectangle(start, object2);
-}
+
+}//end main()
 
 void ForwardOneSquare() // Forward function
 {
@@ -322,6 +354,7 @@ int * foundObj2(int *next)
 }//end foundObj2()
 
 //function to calculate angle to turn to face object
+//and provide length to object
 float *findObjectAngle(int *loc, int *obj)
 {
  float i =(float) (*obj- *loc);
@@ -341,8 +374,21 @@ float *findObjectAngle(int *loc, int *obj)
 }//end findObjectAngle()
  
 //function to return to the first square
-void goHome(int *cur, int *start)
+float *goHome(int *cur, int *start)
 {
-
+ float *home_dir;
+ home_dir = malloc(LSIZE*sizeof(float));
+ 
+ 
+ float i =(float) (*start- *cur);
+ float j =(float) (*(start +1) - *(cur +1));
+ float distance;
+ float y = (i*i) + (j*j);
+ distance = sqrt(y);
+ float x;
+ x = j/distance;
+ float angle = asin(x);
+ *home_dir = distance;
+ *(home_dir + 1) = angle;
 }//end goHome()
  
