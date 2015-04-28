@@ -27,6 +27,9 @@ float home_dir[LSIZE];
 float go_to_object1[LSIZE];
 //array for distance and angle to object2 from start
 float go_to_object2[LSIZE];
+//array for checking specific grid square
+int check[LSIZE];
+
 
 //function prototypes:
 //functions to control movement
@@ -93,7 +96,10 @@ task main()
  //objects found count
  int found_objects = 0;
 
-
+ //index counter
+ int i;
+ 
+ 
  /* Thresholdvalue */
 
  int light; // Variable to hold light value
@@ -107,8 +113,13 @@ task main()
  thresholdValue = sum/2;
 
  wait1Msec(1000);
-
- int r = random(2);
+ 
+ //generate a random number
+ //to be used in navigation
+ srand(123);
+	int r = random(2);
+ 
+ //repeat until both objects found
  while(found_objects < 2)
  {
 
@@ -116,19 +127,131 @@ task main()
  {
  nxtDisplayCenteredTextLine(4, "Black cell");
  setSquareBlack();
-
- if(r == 1)
+ i = 0;
+ 
+ if(dir == 1)//col + 1, left -row, right +row
  {
- dir = LeftTurn(circle, dir);
- }
- else
+  if(((loc[0] -1) == 0) && ((loc[0] + 1) == 0)
+  {
+   if(r == 1)
+   {
+    dir = LeftTurn(circle, dir);
+   }//end if
+   else
+   {
+    dir = RightTurn(circle, dir);
+   }//end else
+  }//end if
+  else
+  {
+   if((loc[0] - 1) == 0)
+   {
+    dir = LeftTurn(circle, dir);
+   }//end if
+   if((loc[0] + 1) == 0)
+   {
+    dir = RightTurn(circle, dir);
+   }//end if
+  }//end else
+  i = i + 1;
+  }//end if  
+  
+  if(dir == 2)//row + 1, left +col, right - col
+  {
+   if(((loc[1] -1) == 0) && ((loc[1] + 1) == 0)
+   {
+    if(r == 1)
+    {
+     dir = LeftTurn(circle, dir);
+    }//end if
+    else
+    {
+     dir = RightTurn(circle, dir);
+    }//end else
+   }//end if
+   else
+   {
+    if((loc[0] + 1) == 0)
+    {
+     dir = LeftTurn(circle, dir);
+    }//end if
+    if((loc[1] - 1) == 0)
+    {
+     dir = RightTurn(circle, dir);
+    }//end if
+   }//end else
+   i = i + 1;
+  }//end if  
+  
+ if(dir == 3)//col - 1, left +row, right -row
  {
- dir = RightTurn(circle, dir);
- }
-
+   if(((loc[0] - 1) == 0) && ((loc[0] + 1) == 0)
+   {
+    if(r == 1)
+    {
+     dir = LeftTurn(circle, dir);
+    }//end if
+    else
+    {
+     dir = RightTurn(circle, dir);
+    }//end else
+    }//end if
+    else
+    {
+     if((loc[0] + 1) == 0)
+     {
+      dir = LeftTurn(circle, dir);
+     }//end if
+     if((loc[0] - 1) == 0)
+     {
+      dir = RightTurn(circle, dir);
+     }//end if
+    }//end else
+  i = i + 1;
+ }//end if  
+  
+ if(dir == 4)//row - 1, left -col, right +col
+ {
+   if(((loc[1] -1) == 0) && ((loc[1] + 1) == 0)
+   {
+    if(r == 1)
+    {
+     dir = LeftTurn(circle, dir);
+    }//end if
+    else
+    {
+     dir = RightTurn(circle, dir);
+    }//end else
+    }//end if
+    else
+    {
+     if((loc[1] - 1) == 0)
+     {
+      dir = LeftTurn(circle, dir);
+     }//end if
+     if((loc[1] + 1) == 0)
+     {
+      dir = RightTurn(circle, dir);
+     }//end if
+    }//end else
+  i = i + 1;
+  }//end if  
+ 
+ if(i == 0)
+ {
+  if(r == 1)
+  {
+   dir = LeftTurn(circle, dir);
+  }//end if
+  else
+  {
+  dir = RightTurn(circle, dir);
+  }//end else
+ }//end if
  setNextSquare(dir);
 
  } // End if()
+ 
  else
  {
  nxtDisplayCenteredTextLine(4, "white cell");
