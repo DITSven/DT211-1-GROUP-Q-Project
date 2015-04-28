@@ -139,6 +139,7 @@ task main()
    {
     dir = RightTurn(circle, dir);
    }//end else
+   i = i + 1;
   }//end if
   else
   {
@@ -150,8 +151,8 @@ task main()
    {
     dir = RightTurn(circle, dir);
    }//end if
+   i = i + 1;
   }//end else
-  i = i + 1;
   }//end if  
   
   if(dir == 2)//row + 1, left +col, right - col
@@ -166,6 +167,7 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end else
+    i = i + 1;
    }//end if
    else
    {
@@ -177,8 +179,8 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end if
+    i = i + 1;
    }//end else
-   i = i + 1;
   }//end if  
   
  if(dir == 3)//col - 1, left +row, right -row
@@ -193,6 +195,7 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end else
+    i = i + 1;
     }//end if
     else
     {
@@ -204,8 +207,8 @@ task main()
      {
       dir = RightTurn(circle, dir);
      }//end if
+     i = i + 1;
     }//end else
-  i = i + 1;
  }//end if  
   
  if(dir == 4)//row - 1, left -col, right +col
@@ -220,6 +223,7 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end else
+    i = i + 1;
     }//end if
     else
     {
@@ -231,8 +235,8 @@ task main()
      {
       dir = RightTurn(circle, dir);
      }//end if
+     i = i + 1;
     }//end else
-  i = i + 1;
   }//end if  
  
  if(i == 0)
@@ -289,6 +293,7 @@ task main()
    {
     dir = RightTurn(circle, dir);
    }//end else
+   i = i + 1;
   }//end if
   else
   {
@@ -300,8 +305,8 @@ task main()
    {
     dir = RightTurn(circle, dir);
    }//end if
+   i = i + 1;
   }//end else
-  i = i + 1;
   }//end if  
   
   if(dir == 2)//row + 1, left +col, right - col
@@ -316,6 +321,7 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end else
+    i = i + 1;
    }//end if
    else
    {
@@ -327,8 +333,8 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end if
+    i = i + 1;
    }//end else
-   i = i + 1;
   }//end if  
   
  if(dir == 3)//col - 1, left +row, right -row
@@ -343,6 +349,7 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end else
+    i = i + 1;
     }//end if
     else
     {
@@ -354,8 +361,8 @@ task main()
      {
       dir = RightTurn(circle, dir);
      }//end if
+     i = i + 1;
     }//end else
-  i = i + 1;
  }//end if  
   
  if(dir == 4)//row - 1, left -col, right +col
@@ -370,6 +377,7 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end else
+    i = i + 1;
     }//end if
     else
     {
@@ -381,8 +389,8 @@ task main()
      {
       dir = RightTurn(circle, dir);
      }//end if
+     i = i + 1;
     }//end else
-  i = i + 1;
   }//end if  
  
  if(i == 0)
@@ -417,6 +425,7 @@ task main()
    {
     dir = RightTurn(circle, dir);
    }//end else
+   i = i + 1;
   }//end if
   else
   {
@@ -428,8 +437,8 @@ task main()
    {
     dir = RightTurn(circle, dir);
    }//end if
+   i = i + 1;
   }//end else
-  i = i + 1;
   }//end if  
   
   if(dir == 2)//row + 1, left +col, right - col
@@ -444,6 +453,7 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end else
+    i = i + 1;
    }//end if
    else
    {
@@ -455,8 +465,8 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end if
+    i = i + 1;
    }//end else
-   i = i + 1;
   }//end if  
   
  if(dir == 3)//col - 1, left +row, right -row
@@ -471,6 +481,7 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end else
+    i = i + 1;
     }//end if
     else
     {
@@ -482,8 +493,8 @@ task main()
      {
       dir = RightTurn(circle, dir);
      }//end if
+     i = i + 1;
     }//end else
-  i = i + 1;
  }//end if  
   
  if(dir == 4)//row - 1, left -col, right +col
@@ -498,6 +509,7 @@ task main()
     {
      dir = RightTurn(circle, dir);
     }//end else
+    i = i + 1;
     }//end if
     else
     {
@@ -509,8 +521,8 @@ task main()
      {
       dir = RightTurn(circle, dir);
      }//end if
+     i = i + 1;
     }//end else
-  i = i + 1;
   }//end if  
  
  if(i == 0)
