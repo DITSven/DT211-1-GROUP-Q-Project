@@ -562,19 +562,19 @@ void setNextSquare(int dir)
  //then update array
  if(dir == 1)
  {
-  next[1] = next[1] + 1;
+  next[1] = loc[1] + 1;
  }//end if
  if(dir == 2)
  {
-  next[0] = next[0] + 1;
+  next[0] = loc[0] + 1;
  }//end if
  if(dir == 3)
  {
-  next[1] = next[1] - 1;
+  next[1] = loc[1] - 1;
  }//end if
  if(dir == 4)
  {
-  next[0] = next[0] - 1;
+  next[0] = loc[0] - 1;
  }//end if
 }//end setNextSquare()
 
