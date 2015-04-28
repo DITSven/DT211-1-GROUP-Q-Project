@@ -274,9 +274,131 @@ task main()
     object2[1] = next[1];
     found_objects = found_objects + 1;
    }//end else
-
   }//end if
- }
+  i = 0;
+ 
+ if(dir == 1)//col + 1, left -row, right +row
+ {
+  if((map[(loc[0] -1)][loc[1]] == 0) && (map[(loc[0] + 1)][loc[1]] == 0))
+  {
+   if(r == 1)
+   {
+    dir = LeftTurn(circle, dir);
+   }//end if
+   else
+   {
+    dir = RightTurn(circle, dir);
+   }//end else
+  }//end if
+  else
+  {
+   if(map[(loc[0] - 1)][loc[1]] == 0)
+   {
+    dir = LeftTurn(circle, dir);
+   }//end if
+   if(map[(loc[0] + 1)][loc[1]] == 0)
+   {
+    dir = RightTurn(circle, dir);
+   }//end if
+  }//end else
+  i = i + 1;
+  }//end if  
+  
+  if(dir == 2)//row + 1, left +col, right - col
+  {
+   if((map[loc[0]][(loc[1] -1)] == 0) && (map[loc[0]][(loc[1] + 1)] == 0))
+   {
+    if(r == 1)
+    {
+     dir = LeftTurn(circle, dir);
+    }//end if
+    else
+    {
+     dir = RightTurn(circle, dir);
+    }//end else
+   }//end if
+   else
+   {
+    if(map[loc[0]][(loc[1] + 1)] == 0)
+    {
+     dir = LeftTurn(circle, dir);
+    }//end if
+    if(map[loc[0]][(loc[1] - 1)] == 0)
+    {
+     dir = RightTurn(circle, dir);
+    }//end if
+   }//end else
+   i = i + 1;
+  }//end if  
+  
+ if(dir == 3)//col - 1, left +row, right -row
+ {
+   if((map[(loc[0] - 1)][loc[1]] == 0) && (map[(loc[0] + 1)][loc[1]] == 0))
+   {
+    if(r == 1)
+    {
+     dir = LeftTurn(circle, dir);
+    }//end if
+    else
+    {
+     dir = RightTurn(circle, dir);
+    }//end else
+    }//end if
+    else
+    {
+     if(map[(loc[0] + 1)][loc[1]] == 0)
+     {
+      dir = LeftTurn(circle, dir);
+     }//end if
+     if(map[(loc[0] - 1)][loc[1]] == 0)
+     {
+      dir = RightTurn(circle, dir);
+     }//end if
+    }//end else
+  i = i + 1;
+ }//end if  
+  
+ if(dir == 4)//row - 1, left -col, right +col
+ {
+   if((map[loc[0]][(loc[1] -1)] == 0) && (map[loc[0]][(loc[1] + 1)] == 0))
+   {
+    if(r == 1)
+    {
+     dir = LeftTurn(circle, dir);
+    }//end if
+    else
+    {
+     dir = RightTurn(circle, dir);
+    }//end else
+    }//end if
+    else
+    {
+     if(map[loc[0]][(loc[1] - 1)] == 0)
+     {
+      dir = LeftTurn(circle, dir);
+     }//end if
+     if(map[loc[0]][(loc[1] + 1)] == 0)
+     {
+      dir = RightTurn(circle, dir);
+     }//end if
+    }//end else
+  i = i + 1;
+  }//end if  
+ 
+ if(i == 0)
+ {
+  if(r == 1)
+  {
+   dir = LeftTurn(circle, dir);
+  }//end if
+  else
+  {
+  dir = RightTurn(circle, dir);
+  }//end else
+ }//end if
+ 
+ setNextSquare(dir);
+ }//end if
  else
  {
   ForwardOneSquare();
@@ -286,26 +408,6 @@ task main()
  } // End else()
  
 
- if(found_objects == 0)
- {
- object1[0] = next[0];
- object1[1] = next[1];
- found_objects = found_objects + 1;
- }//end if
- if(found_objects == 1)
- {
- if ((next[0] == object1[0]) && (next[1] == object1[1]))
- {
- //first object found again
- }//end if
- else
- {
- object2[0] = next[0];
- object2[1] = next[1];
- found_objects = found_objects + 1;
- }//end else
-
- }//end if
 
 }// End while()
 
