@@ -53,7 +53,7 @@ void findObjectAngle1(void);
 void findObjectAngle2(void);
 
 //function to return to start position
-void goHome(int circle, int dir);
+int goHome(int circle, int dir);
 
 //functions for variable turning left and right
 void LeftTurnVar(int circle, float turn_measure);
@@ -558,7 +558,7 @@ task main()
 
 }// End while()
 
-goHome(circle, dir);
+dir = goHome(circle, dir);
 findObjectAngle1();
 findObjectAngle2();
 
@@ -750,8 +750,8 @@ void foundObj2()
 //and provide distance to object1
 void findObjectAngle1()
 {
- float i =(float) (object1[0] - loc[0]);//difference between rows
- float j =(float) (object1[1] - loc[1]);//difference between columns
+ float i =(float) (object1[0] - loc[0])*290;//difference between rows
+ float j =(float) (object1[1] - loc[1])*290;//difference between columns
  float distance;//variable to store hypotenuse (direct distance)
  
  //pythagoras
@@ -762,7 +762,7 @@ void findObjectAngle1()
  float x;
  x = j/distance;
  float angle = asin(x);
- 
+ angle = radiansToDegrees(angle);
  //update array
  go_to_object1[0] = distance;
  go_to_object1[1] = angle;
@@ -773,21 +773,22 @@ void findObjectAngle1()
 //separate function.
 void findObjectAngle2()
 {
- float i =(float) (object2[0] - loc[0]);
- float j =(float) (object2[1] - loc[1]);
+ float i =(float) (object2[0] - loc[0])*290;
+ float j =(float) (object2[1] - loc[1])*290;
  float distance;
  float y = (i*i) + (j*j);
  distance = sqrt(y);
  float x;
  x = j/distance;
  float angle = asin(x);
+ angle = radiansToDegrees(angle);
  go_to_object2[0] = distance;
  go_to_object2[1] = angle;
 }//end findObjectAngle2()
 
 //function to return to the first square
 //works same as findObjectAngle1()
-void goHome(int circle, int dir)
+int goHome(int circle, int dir)
 {
  //declare variables for temp and counter
  int a;
@@ -847,6 +848,21 @@ void goHome(int circle, int dir)
    setNextSquare(dir);
   }//end for
  }//end else
+ //turn to face dir 1
+ if(dir == 2)
+ {
+  dir = TurnLeft(circle, dir);
+ }//end if
+ if(dir == 3)
+ {
+  dir = TurnLeft(circle, dir);
+  dir = TurnLeft(circle, dir);
+ }//end if
+ if(dir == 4)
+ {
+  dir = TurnRight(circle, dir);
+ }//end if
+ 
 }//end if
   
 if(start[0] == loc[0])
@@ -878,8 +894,8 @@ if(start[0] == loc[0])
  //if we're not on the same line as start
  else
  {
-  float i =(float) (start[0] - loc[0]);
-  float j =(float) (start[1] - loc[1]);
+  float i =(float) (start[0] - loc[0])*290;
+  float j =(float) (start[1] - loc[1])*290;
   float distance;
   float y = (i*i) + (j*j);
   distance = sqrt(y);
@@ -906,6 +922,29 @@ if(start[0] == loc[0])
     dir = RightTurn(circle, dir);
    }//end if
    LeftTurnVar(circle, turn_measure);
+   
+   nMotorPIDSpeedCtrl[motorB] = mtrSpeedReg;
+   nMotorPIDSpeedCtrl[motorC] = mtrSpeedReg;
+
+   nMotorEncoder[motorB] = 0;
+   nMotorEncoder[motorC] = 0;
+
+   nMotorEncoderTarget[motorB] = distance;
+   nMotorEncoderTarget[motorC] = distance;
+
+   motor[motorB] = 20;
+   motor[motorC] = 20;
+
+   while(nMotorRunState[motorC] != runStateIdle)
+   {
+    wait1Msec(1000);
+   }
+
+
+   motor[motorB] = 0;
+   motor[motorC] = 0;
+   
+   LeftTurnVar(circle, (270 - turn_measure);//turn to face dir 1
   }//end if
   else
   {
@@ -925,7 +964,32 @@ if(start[0] == loc[0])
     }//end if
    }//end else
    RightTurnVar(circle, turn_measure);
+      nMotorPIDSpeedCtrl[motorB] = mtrSpeedReg;
+   nMotorPIDSpeedCtrl[motorC] = mtrSpeedReg;
+
+   nMotorEncoder[motorB] = 0;
+   nMotorEncoder[motorC] = 0;
+
+   nMotorEncoderTarget[motorB] = distance;
+   nMotorEncoderTarget[motorC] = distance;
+
+   motor[motorB] = 20;
+   motor[motorC] = 20;
+
+   while(nMotorRunState[motorC] != runStateIdle)
+   {
+    wait1Msec(1000);
+   }
+
+
+   motor[motorB] = 0;
+   motor[motorC] = 0;
+   
+   RightTurnVar(circle, (270 - turn_measure);//turn to face dir 1
  }//end else
+ loc[0] = 3;
+ loc[1] = 0;
+ return(dir);
 }//end goHome()
 
 void LeftTurnVar(int circle, float turn_measure)
