@@ -8,7 +8,7 @@
 #define COL 9
 #define LSIZE 2
 
-//define global variables
+//define global variables:
 //2d array for mapping
 int map[ROW][COL];
 //array for start coordinates
@@ -28,16 +28,26 @@ float go_to_object1[LSIZE];
 //array for distance and angle to object2 from start
 float go_to_object2[LSIZE];
 
-//function prototypes
+//function prototypes:
+//functions to control movement
 void ForwardOneSquare(void);
 int LeftTurn(int circle, int dir);
 int RightTurn(int circle, int dir);
+
+//functions to update map array
 void setSquareBlack(void);
+void setSquareWhite(void);
+
+//functions to update location data
 void setNextSquare(int dir);
 void setCurrentSquare(void);
+
+//functions to update found object locations
 void foundObj1(void);
 void foundObj2(void);
-void setSquareWhite(void);
+
+//functions to calculate direction and distance
+//to objects and to start position
 void findObjectAngle1(void);
 void findObjectAngle2(void);
 void goHome(void);
@@ -79,6 +89,7 @@ task main()
  //next coordinates
  next[0] = 3;
  next[1] = 1;
+ 
  //objects found count
  int found_objects = 0;
 
@@ -100,8 +111,7 @@ task main()
  int r = random(2);
  while(found_objects < 2)
  {
- while(SensorValue(SonarSensor) > 27)
- {
+
  if(SensorValue(LightSensor) < thresholdValue)
  {
  nxtDisplayCenteredTextLine(4, "Black cell");
@@ -123,11 +133,37 @@ task main()
  {
  nxtDisplayCenteredTextLine(4, "white cell");
  setSquareWhite();
- ForwardOneSquare();
- setCurrentSquare();
- setNextSquare(dir);
+ if(SensorValue(SonarSensor) < 29)
+ {
+   if(found_objects == 0)
+  {
+   object1[0] = next[0];
+   object1[1] = next[1];
+   found_objects = found_objects + 1;
+  }//end if
+  if(found_objects == 1)
+  {
+   if ((next[0] == object1[0]) && (next[1] == object1[1]))
+   {
+    //first object found again
+   }//end if
+   else
+   {
+    object2[0] = next[0];
+    object2[1] = next[1];
+    found_objects = found_objects + 1;
+   }//end else
+
+  }//end if
+ }
+ else
+ {
+  ForwardOneSquare();
+  setCurrentSquare();
+  setNextSquare(dir);
+ }//end else
  } // End else()
- }//end while()
+ 
 
  if(found_objects == 0)
  {
@@ -285,23 +321,22 @@ void setSquareWhite()
  int i = next[0];
  int j = next[1];
  map[i][j] = 1;
-
 }//end setSquareWhite
 
 //function to mark square as black
 void setSquareBlack()
 {
-
  int i = next[0];
  int j = next[1];
  map[i][j] = 2;
-
 }//end setSquareBlack
 
 
 //function to set next square array
 void setNextSquare(int dir)
 {
+ //check direction
+ //then update array
  if(dir == 1)
  {
   next[1] = next[1] + 1;
@@ -318,7 +353,6 @@ void setNextSquare(int dir)
  {
   next[0] = next[0] - 1;
  }//end if
-
 }//end setNextSquare()
 
 //function to set current location square
@@ -333,16 +367,13 @@ void foundObj1()
 {
  object1[0] = next[0];
  object1[1] = next[1];
-
 }//end foundObj1()
 
 //function to mark found object2 location
 void foundObj2()
 {
-
  object2[0] = next[0];
  object2[1] = next[1];
-
 }//end foundObj2()
 
 //function to calculate angle to turn to face object1
@@ -352,17 +383,24 @@ void findObjectAngle1()
  float i =(float) (object1[0] - loc[0]);//difference between rows
  float j =(float) (object1[1] - loc[1]);//difference between columns
  float distance;//variable to store hypotenuse (direct distance)
+ 
  //pythagoras
  float y = (i*i) + (j*j);
  distance = sqrt(y);
+ 
  //calculating angle using sine
  float x;
  x = j/distance;
  float angle = asin(x);
+ 
+ //update array
  go_to_object1[0] = distance;
  go_to_object1[1] = angle;
 }//end findObjectAngle1()
 
+//function same as findObjectAngle1() 
+//due to reliance on global arrays this needed
+//separate function.
 void findObjectAngle2()
 {
  float i =(float) (object2[0] - loc[0]);
@@ -378,6 +416,7 @@ void findObjectAngle2()
 }//end findObjectAngle2()
 
 //function to return to the first square
+//works same as findObjectAngle1()
 void goHome()
 {
  float i =(float) (start[0] - loc[0]);
