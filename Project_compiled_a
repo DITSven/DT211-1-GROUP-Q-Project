@@ -27,8 +27,6 @@ float home_dir[LSIZE];
 float go_to_object1[LSIZE];
 //array for distance and angle to object2 from start
 float go_to_object2[LSIZE];
-//array for checking specific grid square
-int check[LSIZE];
 
 
 //function prototypes:
@@ -131,7 +129,7 @@ task main()
  
  if(dir == 1)//col + 1, left -row, right +row
  {
-  if((map[(loc[0] -1)][loc[1]] == 0) && (map[(loc[0] + 1)][loc[1]] == 0)
+  if((map[(loc[0] -1)][loc[1]] == 0) && (map[(loc[0] + 1)][loc[1]] == 0))
   {
    if(r == 1)
    {
@@ -158,7 +156,7 @@ task main()
   
   if(dir == 2)//row + 1, left +col, right - col
   {
-   if((map[loc[0]][(loc[1] -1)] == 0) && (map[loc[0]][(loc[1] + 1)] == 0)
+   if((map[loc[0]][(loc[1] -1)] == 0) && (map[loc[0]][(loc[1] + 1)] == 0))
    {
     if(r == 1)
     {
@@ -185,7 +183,7 @@ task main()
   
  if(dir == 3)//col - 1, left +row, right -row
  {
-   if((map[(loc[0] - 1)][loc[1]] == 0) && (map[(loc[0] + 1)][loc[1]] == 0)
+   if((map[(loc[0] - 1)][loc[1]] == 0) && (map[(loc[0] + 1)][loc[1]] == 0))
    {
     if(r == 1)
     {
@@ -212,7 +210,7 @@ task main()
   
  if(dir == 4)//row - 1, left -col, right +col
  {
-   if((map[loc[0]][(loc[1] -1)] == 0) && (map[loc[0]][(loc[1] + 1)] == 0)
+   if((map[loc[0]][(loc[1] -1)] == 0) && (map[loc[0]][(loc[1] + 1)] == 0))
    {
     if(r == 1)
     {
