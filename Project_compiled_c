@@ -783,14 +783,104 @@ void findObjectAngle2()
 //works same as findObjectAngle1()
 void goHome()
 {
- float i =(float) (start[0] - loc[0]);
- float j =(float) (start[1] - loc[1]);
- float distance;
- float y = (i*i) + (j*j);
- distance = sqrt(y);
- float x;
- x = j/distance;
- float angle = asin(x);
- home_dir[0] = distance;
- home_dir[1] = angle;
+ //declare variables for temp and counter
+ int a;
+ int c;
+ 
+ //check if robot is in the same row or column
+ //if it is we can just turn the right direction
+ // and move that many squares to be in start.
+ if((start[0] == loc[0]) || (start[1] == loc[1])
+ {
+  if(start[1] == loc[1])
+  {
+   a = loc[0] - start[0];
+   if(a > 0)
+   {
+   //need to turn to dir 4
+   if(dir == 1)
+   {
+    dir = LeftTurn(circle, dir);
+   }//end if
+   if(dir == 2)
+   {
+    dir = LeftTurn(circle, dir);
+    dir = LeftTurn(circle, dir);
+   }//end if
+   if(dir == 3)
+   {
+    dir = RightTurn(circle, dir);
+   }//end if
+   for(c = 0; c < a; c++)
+   {
+    ForwardOneSquare();
+    setCurrentSquare();
+    setNextSquare(dir);
+   }//end for
+  }//end if
+  else
+  {
+  //need direction 2
+  if(dir == 1)
+  {
+   dir = RightTurn(circle, dir);
+  }//end if
+  if(dir == 3)
+  {
+   dir = LeftTurn(circle, dir);
+  }//end if
+  if(dir == 4)
+  {
+   dir = RightTurn(circle, dir);
+   dir = RightTurn(circle, dir);
+  }//end if
+  for(c = 0; c < (a * (-1)); c++)
+  {
+   ForwardOneSquare();
+   setCurrentSquare();
+   setNextSquare(dir);
+  }//end for
+ }//end else
+}//end if
+  
+if(start[0] == loc[0])
+{
+ a = loc[1];
+ //need to be facing dir 4
+ if(dir == 3)
+ {
+  dir = LeftTurn(circle, dir);
+ }//end if
+ if(dir == 1)
+ {
+  dir = LeftTurn(circle, dir);
+  dir = LeftTurn(circle, dir);
+ }//end if
+ if(dir == 2)
+ {
+  dir = RightTurn(circle, dir);
+  }//end if
+  for(c = 0; c < a; c++)
+  {
+   ForwardOneSquare();
+   setCurrentSquare();
+   setNextSquare(dir);
+  }//end for
+ }//end if
+}//end if
+ 
+ //if we're not on the same line as start
+ else
+ {
+  float i =(float) (start[0] - loc[0]);
+  float j =(float) (start[1] - loc[1]);
+  float distance;
+  float y = (i*i) + (j*j);
+  distance = sqrt(y);
+  float x;
+  x = j/distance;
+  float angle = asin(x);
+  home_dir[0] = distance;
+  home_dir[1] = angle;
+ }
 }//end goHome()
