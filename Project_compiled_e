@@ -21,8 +21,7 @@ int loc[LSIZE];
 int object1[LSIZE];
 //array for coordinates of second object found
 int object2[LSIZE];
-//array for distance and angle to start square
-float home_dir[LSIZE];
+
 //array for distance and angle to object1 from start
 float go_to_object1[LSIZE];
 //array for distance and angle to object2 from start
@@ -797,7 +796,7 @@ int goHome(int circle, int dir)
  //check if robot is in the same row or column
  //if it is we can just turn the right direction
  // and move that many squares to be in start.
- if((start[0] == loc[0]) || (start[1] == loc[1])
+ if((start[0] == loc[0]) || (start[1] == loc[1]))
  {
   if(start[1] == loc[1])
   {
@@ -851,16 +850,16 @@ int goHome(int circle, int dir)
  //turn to face dir 1
  if(dir == 2)
  {
-  dir = TurnLeft(circle, dir);
+  dir = LeftTurn(circle, dir);
  }//end if
  if(dir == 3)
  {
-  dir = TurnLeft(circle, dir);
-  dir = TurnLeft(circle, dir);
+  dir = LeftTurn(circle, dir);
+  dir = LeftTurn(circle, dir);
  }//end if
  if(dir == 4)
  {
-  dir = TurnRight(circle, dir);
+  dir = RightTurn(circle, dir);
  }//end if
  
 }//end if
@@ -944,7 +943,7 @@ if(start[0] == loc[0])
    motor[motorB] = 0;
    motor[motorC] = 0;
    
-   LeftTurnVar(circle, (270 - turn_measure);//turn to face dir 1
+   LeftTurnVar(circle, (270 - turn_measure));//turn to face dir 1
   }//end if
   else
   {
@@ -985,7 +984,7 @@ if(start[0] == loc[0])
    motor[motorB] = 0;
    motor[motorC] = 0;
    
-   RightTurnVar(circle, (270 - turn_measure);//turn to face dir 1
+   RightTurnVar(circle, (270 - turn_measure));//turn to face dir 1
  }//end else
  loc[0] = 3;
  loc[1] = 0;
