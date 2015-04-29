@@ -1082,8 +1082,8 @@ void goObject(int circle)
    {
     LeftTurnVar(circle, angle);
    }//end else
+  }//end if
  }//end if
- 
  nMotorPIDSpeedCtrl[motorB] = mtrSpeedReg;
  nMotorPIDSpeedCtrl[motorC] = mtrSpeedReg;
 
