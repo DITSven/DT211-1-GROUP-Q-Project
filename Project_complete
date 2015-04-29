@@ -12,7 +12,7 @@
 //2d array for mapping
 int map[ROW][COL];
 //array for start coordinates
-int start[LSIZE];
+int start_loc[LSIZE];
 //array for coordinates of next square
 int next[LSIZE];
 //array for coordinates of current square
@@ -58,6 +58,9 @@ int goHome(int circle, int dir);
 void LeftTurnVar(int circle, float turn_measure);
 void RightTurnVar(int circle, float turn_measure);
 
+//function to go to nearest object
+void goObject(int circle);
+
 task main()
 {
  /* Accurate turns calculation */
@@ -89,8 +92,8 @@ task main()
  loc[1] = 0;
 
  //start location
- start[0] = 3;
- start[0] = 0;
+ start_loc[0] = 3;
+ start_loc[0] = 0;
 
  //next coordinates
  next[0] = 3;
@@ -560,7 +563,7 @@ task main()
 dir = goHome(circle, dir);
 findObjectAngle1();
 findObjectAngle2();
-
+goObject(circle);
 }//end main()
 
 void ForwardOneSquare() // Forward function
@@ -796,11 +799,11 @@ int goHome(int circle, int dir)
  //check if robot is in the same row or column
  //if it is we can just turn the right direction
  // and move that many squares to be in start.
- if((start[0] == loc[0]) || (start[1] == loc[1]))
+ if((start_loc[0] == loc[0]) || (start_loc[1] == loc[1]))
  {
-  if(start[1] == loc[1])
+  if(start_loc[1] == loc[1])
   {
-   a = loc[0] - start[0];
+   a = loc[0] - start_loc[0];
    if(a > 0)
    {
    //need to turn to dir 4
@@ -864,7 +867,7 @@ int goHome(int circle, int dir)
  
 }//end if
   
-if(start[0] == loc[0])
+if(start_loc[0] == loc[0])
 {
  a = loc[1];
  //need to be facing dir 4
@@ -893,8 +896,8 @@ if(start[0] == loc[0])
  //if we're not on the same line as start
  else
  {
-  float i =(float) (start[0] - loc[0])*290;
-  float j =(float) (start[1] - loc[1])*290;
+  float i =(float) (start_loc[0] - loc[0])*290;
+  float j =(float) (start_loc[1] - loc[1])*290;
   float distance;
   float y = (i*i) + (j*j);
   distance = sqrt(y);
@@ -963,7 +966,8 @@ if(start[0] == loc[0])
     }//end if
    }//end else
    RightTurnVar(circle, turn_measure);
-      nMotorPIDSpeedCtrl[motorB] = mtrSpeedReg;
+   
+   nMotorPIDSpeedCtrl[motorB] = mtrSpeedReg;
    nMotorPIDSpeedCtrl[motorC] = mtrSpeedReg;
 
    nMotorEncoder[motorB] = 0;
@@ -1037,3 +1041,66 @@ void RightTurnVar(int circle, float turn_measure)
  motor[motorB] = 0;
  motor[motorC] = 0;
 }//end RightTurnVar
+
+//function to go to nearest object
+void goObject(int circle)
+{
+ float distance, angle;
+ int obj;
+ if(go_to_object1[0] > go_to_object2[0])
+ {
+  distance = go_to_object1[0];
+  angle = go_to_object1[1];
+  obj = 1;
+ }//end if
+ else
+ {
+  distance = go_to_object2[0];
+  angle = go_to_object2[1];
+  obj = 2;
+ }//end else
+ angle = angle/360;
+ 
+ if(obj == 1)
+ {
+  if(object1[0] > start_loc[0])
+  {
+   RightTurnVar(circle, angle);
+  }//end if
+  else
+  {
+   LeftTurnVar(circle, angle);
+  }//end else
+  
+  if(obj == 2)
+  {
+   if(object2[0] > start_loc[0])
+   {
+    RightTurnVar(circle, angle);
+   }//end if
+   else
+   {
+    LeftTurnVar(circle, angle);
+   }//end else
+ }//end if
+ 
+ nMotorPIDSpeedCtrl[motorB] = mtrSpeedReg;
+ nMotorPIDSpeedCtrl[motorC] = mtrSpeedReg;
+
+ nMotorEncoder[motorB] = 0;
+ nMotorEncoder[motorC] = 0;
+
+ nMotorEncoderTarget[motorB] = distance;
+ nMotorEncoderTarget[motorC] = distance;
+
+ motor[motorB] = 20;
+ motor[motorC] = 20;
+
+ while(nMotorRunState[motorC] != runStateIdle)
+ {
+  wait1Msec(1000);
+ }
+
+ motor[motorB] = 0;
+ motor[motorC] = 0;
+}//end goObject()
